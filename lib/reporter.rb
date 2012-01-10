@@ -12,18 +12,18 @@ module Reporter
   
   module ClassMethods
     
-    #report "students_attendence_report" do |report|
+    #report "students_attendence_report" do |r|
     # 
-    #   report.rtitle "Student Attendence Report"
+    #   r.rtitle "Student Attendence Report"
     # 
-    #   report.rcolumn "r_student_id", :heading=>"Id", :display=>false
-    #   report.rcolumn "r_date", :heading=>"Date", :select=>"DATE_FORMAT(DATE_ADD(students.punched_in_at, INTERVAL 5.5 HOUR), '%d %M %Y %H:%i:%s')"
-    #   report.rcolumn "r_student_register_id", :heading=>"Student ID", :select=>"CONCAT('STD2001',1000 + students.id)", :link=>"get_student_page_link"
-    #   report.rcolumn "r_name", :heading=>"Name", :select=>"name"
-    #   report.rcolumn "r_email", :heading=>"Email", :select=>"students.email"
-    #   report.rcolumn "r_class_name", :heading=>"", :select=>"students.class_name"
-    #   report.rcolumn "r_absent", :heading=>"Absent?", :select=>"CASE WHEN users.absent THEN 'Yes' ELSE 'No' END"
-    #   report.rcolumn "r_average", :heading=>"Average", :function_name=>"display_average"
+    #   r.rcolumn "r_student_id", :heading=>"Id", :display=>false
+    #   r.rcolumn "r_date", :heading=>"Date", :select=>"DATE_FORMAT(DATE_ADD(students.punched_in_at, INTERVAL 5.5 HOUR), '%d %M %Y %H:%i:%s')"
+    #   r.rcolumn "r_student_register_id", :heading=>"Student ID", :select=>"CONCAT('STD2001',1000 + students.id)", :link=>"get_student_page_link"
+    #   r.rcolumn "r_name", :heading=>"Name", :select=>"name"
+    #   r.rcolumn "r_email", :heading=>"Email", :select=>"students.email"
+    #   r.rcolumn "r_class_name", :heading=>"", :select=>"students.class_name"
+    #   r.rcolumn "r_absent", :heading=>"Absent?", :select=>"CASE WHEN users.absent THEN 'Yes' ELSE 'No' END"
+    #   r.rcolumn "r_average", :heading=>"Average", :function_name=>"display_average"
     # 
     # end
     

@@ -1,7 +1,7 @@
 module Reporter
   class Report
     require "csv"
-    attr_accessor :name, :title, :fields, :joins, :charts, :klass, :select, :where, :order, :per_page, :current_page
+    attr_accessor :name, :title, :fields, :joins, :klass, :select, :where, :order, :per_page, :current_page
     
     # report = Reporter::Report.new(rname)
     
@@ -11,7 +11,6 @@ module Reporter
       self.fields = []
       self.joins = []
       self.where = []
-      self.charts = []
       self.select = []
       self.per_page = 100
       self.current_page = 1

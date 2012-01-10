@@ -1,47 +1,52 @@
 module Reporter
   module Helper
-    def temp
-      # <table border="1">
-      #         <thead>
-      #           <tr>
-      #             <th>Month</th>
-      #             <th>Savings</th>
-      #           </tr>
-      #         </thead>
-      #         <tfoot>
-      #           <tr>
-      #             <td>Sum</td>
-      #             <td>$180</td>
-      #           </tr>
-      #         </tfoot>
-      #         <tbody>
-      #           <tr>
-      #             <td>January</td>
-      #             <td>$100</td>
-      #           </tr>
-      #           <tr>
-      #             <td>February</td>
-      #             <td>$80</td>
-      #           </tr>
-      #         </tbody>
-      #       </table>
+    
+    def render_chart(chart_name, div_name, cols, rows, options={})
+      options[:width] = options[:width] || 400
+      options[:height] = options[:height] || 200
+      jscript_code = ""
+      jscript_code = jscript_code + "<script type='text/javascript' src='https://www.google.com/jsapi'></script>"
+          jscript_code = jscript_code + "<script type='text/javascript'>"
+            jscript_code = jscript_code + "google.load('visualization', '1', {packages:[\"corechart\"]});"
+            jscript_code = jscript_code + "google.setOnLoadCallback(drawChart);"
+            jscript_code = jscript_code + "function drawChart() {"
+              jscript_code = jscript_code + " var data = new google.visualization.DataTable();"
+              cols.each do |c|
+                jscript_code = jscript_code + " data.addColumn('#{c[0]}', '#{c[1]}');"
+              end
+              jscript_code = jscript_code + " data.addRows(["
+                rows.each_with_index do |r, i|
+                  jscript_code = jscript_code + " #{r.to_s} #{',' if i < (rows.size - 1)}"
+                end
+              jscript_code = jscript_code + " ]);"
+              
+              ## Appending Options
+              jscript_code = jscript_code + " var options = #{options.to_json}; "
+              
+              jscript_code = jscript_code + " var chart = new google.visualization.#{chart_name}(document.getElementById('#{div_name}'));"
+              jscript_code = jscript_code + " chart.draw(data, options);"
+            jscript_code = jscript_code + " }"
+          jscript_code = jscript_code + " </script>"
+          return jscript_code
     end
     
     def render_report(result, options={})
-      render_table(result, options={})
+      render_gtable(result, options={})
     end
     
     def render_gtable(result, options={})
+      
+      report = result.report
+      results = result.results
+      hsh = report.hsh(results)
+      
       jscript_code = ""
+      #jscript_code = jscript_code + "<h1 style='margin-bottom:10px;'>#{report.title}</h1>"
       jscript_code = jscript_code + "<script type='text/javascript' src='https://www.google.com/jsapi'></script>"
       jscript_code = jscript_code + "<script type='text/javascript'>"
       jscript_code = jscript_code + "google.load('visualization', '1', {packages:['table']});"
       jscript_code = jscript_code + "google.setOnLoadCallback(drawTable);"
       jscript_code = jscript_code + "function drawTable() {"
-        
-        report = result.report
-        results = result.results
-        hsh = report.hsh(results)
         
         jscript_code = jscript_code + "var data = new google.visualization.DataTable();"
         
@@ -57,14 +62,14 @@ module Reporter
         hsh[:rows].each_with_index do |item,x|
           row = item[:c]
           row.each_with_index do |column,y|
-            puts "-"*100
-            puts "#{hsh[:cols][y][:type]}".blue
-            puts "#{column[:v]}, #{column[:f]}".yellow
+            #puts "-"*100
+            #puts "#{hsh[:cols][y][:type]}".blue
+            #puts "#{column[:v]}, #{column[:f]}".yellow
             if ["date", "boolean"].include?(hsh[:cols][y][:type].to_s)
-              puts "Eureeka! Its a date".green
+              #puts "Eureeka! Its a date".green
               jscript_code = jscript_code + "data.setCell(#{x}, #{y}, #{column[:v]}, '#{column[:f]}');"
             else
-              puts "No luck! Its a ".red
+              #puts "No luck! Its a ".red
               jscript_code = jscript_code + "data.setCell(#{x}, #{y}, '#{column[:v]}', '#{column[:f]}');"
             end
           end

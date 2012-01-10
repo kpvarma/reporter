@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.summary     = %q{reporter is a gem which can be attached to any model to build custom query on it using joins and selects}
   s.description = %q{It comes with its own helper methods to display the reports. either in the form of an html table, or using google charts, or google chart table apis.}
 
-  s.rubyforge_project = "reporter"
+  s.rubyforge_project = "drilldown"
 
   s.files         = Dir.glob("{bin,lib}/**/*")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
