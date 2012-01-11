@@ -3,6 +3,7 @@ require "reporter/field"
 require "reporter/report"
 require "reporter/result"
 require "reporter/helper"
+require "reporter/chart"
 
 module Reporter
   
