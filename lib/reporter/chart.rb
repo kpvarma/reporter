@@ -27,7 +27,7 @@ module Reporter
     # interval = :year
     # conditions = {"Premium Job"=>{:class_name=>"Job", :where=>"premium = true", :field_name=>"created_at"}, "Standard Job"=>{:class_name=>"Job", :where=>"premium = false", :field_name=>"created_at"}, "Premium Candidates"=>{:class_name=>"Individual", :where=>"premium = true", :field_name=>"created_at"}, "Standard Candidates"=>{:class_name=>"Individual", :where=>"premium = false", :field_name=>"created_at"}}
     # Chart.data(interval, conditions)
-    def self.data(interval, conditions)
+    def self.data(interval, conditions, frequency=10)
       
       item_hsh = {}
       conditions.each do |name, condition|
@@ -35,9 +35,14 @@ module Reporter
         field_name = condition[:field_name]
         interval_hsh = get_interval_query(field_name, interval)
         
+        start_date = eval("Time.now - #{frequency}.#{interval}s")
+        end_date = Time.now
+        
         #puts field_name.red
         #puts interval_hsh.to_s.green
-        items = eval("#{cls}.select(\"#{interval_hsh[:select_interval]}, count(#{field_name}) as cnt\").where(\"#{condition[:where]}\").group(\"#{interval_hsh[:group_interval]}\")")
+        query = "#{cls}.select(\"#{interval_hsh[:select_interval]}, count(#{field_name}) as cnt\").where(\"#{condition[:where]} AND #{field_name} >= :start_date AND #{field_name} <= :end_date\", {:start_date => start_date, :end_date => end_date}).group(\"#{interval_hsh[:group_interval]}\").order(\"#{interval_hsh[:group_interval]}\")"
+        puts query.blue
+        items = eval(query)
         arr = items.map{|x| [x.interval_time, x.cnt]}
         hsh = arr.inject(Hash.new {|h,k| h[k]=0}) {|ha,(cat,name)| ha[cat] = name; ha}
         #puts hsh.to_s.blue
