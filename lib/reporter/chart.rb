@@ -46,7 +46,7 @@ module Reporter
     #   c.vAxis :title=> 'Events',  :titleTextStyle=> {:color=> 'blue'}
     def cvAxis(*args)
       hsh = {}
-      args.each do |k, v|
+      args[0].each do |k, v|
         hsh[k] = v unless k.blank?
       end
       self.vAxis = hsh
@@ -55,7 +55,7 @@ module Reporter
     #   c.hAxis :title=> 'Time',  :titleTextStyle=> {:color=> 'red'}
     def chAxis(*args)
       hsh = {}
-      args.each do |k, v|
+      args[0].each do |k, v|
         hsh[k] = v unless k.blank?
       end
       self.hAxis = hsh
@@ -83,9 +83,9 @@ module Reporter
 
     def cclass_data(*args)
       hsh = {}
-      puts args.to_s.red
+      #puts args.to_s.red
       args[0].each do |k, v|
-        puts "#{k} => #{v}".magenta
+        #puts "#{k} => #{v}".magenta
         hsh[k] = v unless k.blank?
       end
       self.class_data << hsh
@@ -163,21 +163,26 @@ module Reporter
       rows = self.data(interval, conditions, frequency=10)
       json_rows = []
       rows.each do |row|
-        json_rows << {"c"=>row.map{|r| {"v"=>r[0],"f"=>nil}  }}
+        #json_rows << {"c"=>row.map{|r| {"v"=>r[0],"f"=>nil}  }}
+        hsh_x = []
+        row.each do |item|
+          hsh_x << {"v"=>item,"f"=>nil}
+        end
+        json_rows << {"c"=> hsh_x}
       end
       return json_rows
     end
 
     def self.hsh(cols, interval, conditions, frequency=10)
       
-      puts ""
-      puts ""
-      puts "cols : #{cols}".green
-      puts "interval : #{interval}".green
-      puts "conditions : #{conditions}".green
-      puts "frequency : #{frequency}".green
-      puts ""
-      puts ""
+      #puts ""
+      #puts ""
+      #puts "cols : #{cols}".green
+      #puts "interval : #{interval}".green
+      #puts "conditions : #{conditions}".green
+      #puts "frequency : #{frequency}".green
+      #puts ""
+      #puts ""
       
       json_cols = self.get_json_cols(cols)
       json_rows = self.get_json_rows(interval, conditions, frequency=10)
@@ -195,9 +200,9 @@ module Reporter
     # Chart.data(interval, conditions)
     def self.data(interval, conditions, frequency=10)
       
-      puts "interval : #{interval}".red
-      puts "frequency : #{frequency}".red
-      puts "conditions : #{conditions}".red
+      #puts "interval : #{interval}".red
+      #puts "frequency : #{frequency}".red
+      #puts "conditions : #{conditions}".red
       
       item_hsh = {}
       conditions.each do |condition|
@@ -211,7 +216,7 @@ module Reporter
         #puts field_name.red
         #puts interval_hsh.to_s.green
         query = "#{cls}.select(\"#{interval_hsh[:select_interval]}, count(#{field_name}) as cnt\").where(\"#{condition[:where]} AND #{field_name} >= :start_date AND #{field_name} <= :end_date\", {:start_date => start_date, :end_date => end_date}).group(\"#{interval_hsh[:group_interval]}\").order(\"#{interval_hsh[:group_interval]}\")"
-        puts query.blue
+        #puts query.blue
         items = eval(query)
         arr = items.map{|x| [x.interval_time, x.cnt]}
         hsh = arr.inject(Hash.new {|h,k| h[k]=0}) {|ha,(cat,name)| ha[cat] = name; ha}
