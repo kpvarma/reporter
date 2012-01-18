@@ -1,6 +1,26 @@
 module Reporter
   module Helper
     
+    def generate_reload_chart_function
+      # code << EOF
+      #         function reloadChart(chart_type, divid, width, height, url) {
+      #             // url = "/charts/Admin/dashboard_report/month/4";
+      #             var jsonData = jQuery.ajax({
+      #                   url: url,
+      #                   dataType:"json",
+      #                   async: false
+      #                   }).responseText;
+      #             console.log(jsonData);
+      #             // Create our data table out of JSON data loaded from server.
+      #             var data = new google.visualization.DataTable(jsonData);
+      #             // Instantiate and draw our chart, passing in some options.
+      #             eval("var chart = new google.visualization." + chart_type + "(document.getElementById(divid));");
+      #             chart.draw(data, {width: width, height: height});
+      #         }
+      #       EOF
+      #       return code
+    end
+    
     def render_chart(chart_name, div_name, cols, rows, options={})
       options[:width] = options[:width] || 400
       options[:height] = options[:height] || 200

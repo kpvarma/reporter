@@ -43,6 +43,53 @@ module Reporter
       end
     end
     
+    # ## Charting
+    #     chart "admin_dashboard" do |c|
+    # 
+    #        c.chart_type "LineChart"
+    #        c.title "Job Postings Vs Time"
+    #        c.width 400
+    #        c.height 500
+    #        c.vAxis :title=> 'Events',  :titleTextStyle=> {:color=> 'blue'}
+    #        c.hAxis :title=> 'Time',  :titleTextStyle=> {:color=> 'red'}
+    # 
+    #        c.column "String", "Month"
+    #        c.column "number", "Premium Jobs"
+    #        c.column "number", "Standard Jobs"
+    #        c.column "number", "Candidates"
+    #        c.column "number", "Premium Candidates"
+    #        c.column "number", "Privilege Candidates"
+    # 
+    #        c.divid "admin_dashboard_bar_chart"
+    # 
+    #        c.class_data  {:class_name=>"Job", :where=>"premium = true", :field_name=>"created_at"}
+    #        c.class_data  {:class_name=>"Job", :where=>"premium = false", :field_name=>"created_at"}
+    #        c.class_data  {:class_name=>"Individual", :where=>"premium = true", :field_name=>"created_at"}
+    #        c.class_data  {:class_name=>"Individual", :where=>"premium = false", :field_name=>"created_at"}
+    # 
+    #        c.interval 4
+    #        c.frequency :month
+    # 
+    #        c.controller_name "charts"
+    #        c.action_name "show"
+    # 
+    #     end
+    
+    def chart(*args, &block)
+      args.each do |cname|
+        #puts "cname ".red + rname.green
+        chart = Reporter::Chart.new(cname)
+        yield(chart)
+        cattr_accessor :charts
+        chart.klass = self
+        if self.charts.blank?
+          self.charts = {cname => chart}
+        else
+          self.charts[cname] = chart
+        end
+      end
+    end
+    
     # Student.fetch()
     
     def fetch(rname, options={})
