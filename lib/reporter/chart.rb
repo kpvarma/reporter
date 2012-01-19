@@ -61,7 +61,7 @@ module Reporter
       self.hAxis = hsh
     end
     
-    # c.column "String", "Month"
+    # c.column "string", "Month"
     # c.column "number", "Premium Jobs"
     # c.column "number", "Standard Jobs"
     # c.column "number", "Candidates"
@@ -109,6 +109,10 @@ module Reporter
     # c.action_name "show"
     def caction_name(action_name)
       self.action_name = action_name
+    end
+    
+    def options
+      {:vAxis => self.vAxis, :hAxis => self.hAxis, :width => self.width, :height => self.height}
     end
     
     def self.get_interval_query(field_name, interval)
