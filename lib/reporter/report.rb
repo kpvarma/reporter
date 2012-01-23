@@ -1,7 +1,7 @@
 module Reporter
   class Report
     require "csv"
-    attr_accessor :name, :title, :fields, :joins, :klass, :select, :where, :order, :per_page, :current_page
+    attr_accessor :name, :title, :fields, :joins, :klass, :select, :where, :order, :group, :having, :per_page, :current_page
     
     # report = Reporter::Report.new(rname)
     
@@ -85,6 +85,8 @@ module Reporter
       end
       
       order = options[:order] unless options[:order].blank?
+      group = self.group || ""
+      having = self.having || ""
       
       joins = self.joins
       select_query = self.select.join(", ")
@@ -92,7 +94,7 @@ module Reporter
       where_values = {}
       where_values = options[:where] unless options[:where].blank?
       
-      hsh_query = {:select=>select_query, :joins=>self.joins, :where=>{:query=>where_query, :values=>where_values}, :order=>order, :per_page=>per_page, :current_page=>current_page}
+      hsh_query = {:select=>select_query, :joins=>self.joins, :where=>{:query=>where_query, :values=>where_values}, :order=>order, :group=>group, :having=>having, :per_page=>per_page, :current_page=>current_page}
       hsh_query.delete_if{|k,v| k.blank? || v.blank?}
       
       relation = self.klass.select(hsh_query[:select])
