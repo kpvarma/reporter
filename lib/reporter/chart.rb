@@ -216,10 +216,13 @@ module Reporter
 
         start_date = eval("Time.now - #{frequency}.#{interval}s")
         end_date = Time.now
+        
+        start_time = Time.utc(start_date.year,start_date.month,start_date.day,00,00,00)
+        end_time = Time.utc(end_date.year,end_date.month,end_date.day,00,00,00)
 
         #puts field_name.red
         #puts interval_hsh.to_s.green
-        query = "#{cls}.select(\"#{interval_hsh[:select_interval]}, count(#{field_name}) as cnt\").where(\"#{condition[:where]} AND #{field_name} >= :start_date AND #{field_name} <= :end_date\", {:start_date => start_date, :end_date => end_date}).group(\"#{interval_hsh[:group_interval]}\").order(\"#{interval_hsh[:group_interval]}\")"
+        query = "#{cls}.select(\"#{interval_hsh[:select_interval]}, count(#{field_name}) as cnt\").where(\"#{condition[:where]} AND #{field_name} >= :start_time AND #{field_name} <= :end_time\", {:start_time => start_time, :end_time => end_time}).group(\"#{interval_hsh[:group_interval]}\").order(\"#{interval_hsh[:group_interval]}\")"
         #puts query.blue
         items = eval(query)
         arr = items.map{|x| [x.interval_time, x.cnt]}

@@ -58,6 +58,16 @@ module Reporter
       #puts "order ".red + value.to_s.green
     end
     
+    def rgroup(value)
+      self.group = value
+      #puts "group ".red + value.to_s.green
+    end
+    
+    def rhaving(value)
+      self.having = value
+      #puts "having ".red + value.to_s.green
+    end
+    
     def fetch(options=[])
       relation = self.construct(options)
       current_page = 1
@@ -89,6 +99,8 @@ module Reporter
       relation = relation.joins(hsh_query[:joins]) if hsh_query[:joins]
       relation = relation.where(hsh_query[:where][:query], hsh_query[:where][:values]) if hsh_query[:where][:query] and hsh_query[:where][:values]
       relation = relation.order(hsh_query[:order]) if hsh_query[:order]
+      relation = relation.group(hsh_query[:group]) if hsh_query[:group]
+      relation = relation.having(hsh_query[:having]) if hsh_query[:having]
       return relation
     end
     
