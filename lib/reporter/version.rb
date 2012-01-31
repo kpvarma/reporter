@@ -1,3 +1,3 @@
 module Reporter
-  VERSION = "0.0.10.alpha"
+  VERSION = "0.0.11.alpha"
 end

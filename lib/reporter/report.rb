@@ -80,7 +80,15 @@ module Reporter
     
     def total_count(options=[])
       relation = self.construct(options)
-      return relation.count()
+      count = relation.count()
+      puts "count class = #{count.class.name}"
+      ## The count can be a hash if there is a group by clause 
+      if count.is_a?(Hash)
+        return count.values.inject(0){|sum,x| sum+x}
+      else
+        return count
+      end
+      
     end
     
     def construct(options={})
