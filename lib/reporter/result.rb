@@ -1,7 +1,7 @@
 module Reporter
   class Result
     
-    attr_accessor :report, :results
+    attr_accessor :report, :results, :total_count
     
       
   end

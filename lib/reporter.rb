@@ -95,8 +95,10 @@ module Reporter
     def fetch(rname, options={})
       report = self.reports[rname]
       results = report.fetch(options)
+      total_count = report.total_count(options)
       result = Reporter::Result.new
       result.report = report
+      result.total_count = total_count
       result.results = results
       return result
     end

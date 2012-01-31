@@ -78,6 +78,11 @@ module Reporter
       return relation
     end
     
+    def total_count(options=[])
+      relation = self.construct(options)
+      return relation.count()
+    end
+    
     def construct(options={})
       self.select = []
       self.fields.each do |field|
