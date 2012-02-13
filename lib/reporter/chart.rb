@@ -218,7 +218,7 @@ module Reporter
         end_date = Time.now
         
         start_time = Time.utc(start_date.year,start_date.month,start_date.day,00,00,00)
-        end_time = Time.utc(end_date.year,end_date.month,end_date.day,00,00,00)
+        end_time = Time.utc(end_date.year,end_date.month,end_date.day,23,59,59)
 
         #puts field_name.red
         #puts interval_hsh.to_s.green
