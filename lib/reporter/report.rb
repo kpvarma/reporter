@@ -74,7 +74,7 @@ module Reporter
       current_page = options[:current_page] if options[:current_page]
       per_page = 25
       per_page = options[:per_page] if options[:per_page]
-      relation = relation.page(current_page).per(per_page) 
+      relation = relation.limit(per_page).offset(current_page - 1) 
       return relation
     end
     
