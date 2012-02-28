@@ -164,7 +164,7 @@ module Reporter
     end
 
     def self.get_json_rows(interval, conditions, frequency=10)
-      rows = self.data(interval, conditions, frequency=10)
+      rows = self.data(interval, conditions, frequency)
       json_rows = []
       rows.each do |row|
         #json_rows << {"c"=>row.map{|r| {"v"=>r[0],"f"=>nil}  }}
@@ -189,7 +189,7 @@ module Reporter
       #puts ""
       
       json_cols = self.get_json_cols(cols)
-      json_rows = self.get_json_rows(interval, conditions, frequency=10)
+      json_rows = self.get_json_rows(interval, conditions, frequency)
       hsh = {"cols" => json_cols, "rows"=>json_rows}
       return hsh
     end
@@ -202,7 +202,7 @@ module Reporter
     # interval = :year
     # conditions = {"Premium Job"=>{:class_name=>"Job", :where=>"premium = true", :field_name=>"created_at"}, "Standard Job"=>{:class_name=>"Job", :where=>"premium = false", :field_name=>"created_at"}, "Premium Candidates"=>{:class_name=>"Individual", :where=>"premium = true", :field_name=>"created_at"}, "Standard Candidates"=>{:class_name=>"Individual", :where=>"premium = false", :field_name=>"created_at"}}
     # Chart.data(interval, conditions)
-    def self.data(interval, conditions, frequency=10)
+    def self.data(interval, conditions, frequency)
       
       #puts "interval : #{interval}".red
       #puts "frequency : #{frequency}".red
@@ -213,22 +213,26 @@ module Reporter
         cls = condition[:class_name]
         field_name = condition[:field_name]
         interval_hsh = get_interval_query(field_name, interval)
-
-        start_date = eval("Time.now - #{frequency}.#{interval}s")
-        end_date = Time.now
         
-        start_time = Time.utc(start_date.year,start_date.month,start_date.day,00,00,00)
-        end_time = Time.utc(end_date.year,end_date.month,end_date.day,23,59,59)
-
-        #puts field_name.red
-        #puts interval_hsh.to_s.green
+        #puts "interval = #{interval}".red
+        #puts "frequency = #{frequency}".red
+        #puts "#{frequency}.#{interval}.ago.to_time = #{frequency}.#{interval}.ago.to_time".red
+        
+        start_time = eval("#{frequency}.#{interval}.ago.to_time")
+        today = Date.today
+        end_time = Time.utc(today.year,today.month,today.day,23,59,59)
+        
+        #puts "start_time = " + start_time.to_s.red
+        #puts "end_time = " + end_time.to_s.red
+        
+        #puts "field_name = " + field_name.red
+        #puts "interval_hsh = " + interval_hsh.to_s.green
         query = "#{cls}.select(\"#{interval_hsh[:select_interval]}, count(#{field_name}) as cnt\").where(\"#{condition[:where]} AND #{field_name} >= :start_time AND #{field_name} <= :end_time\", {:start_time => start_time, :end_time => end_time}).group(\"#{interval_hsh[:group_interval]}\").order(\"#{interval_hsh[:group_interval]}\")"
-        #puts query.blue
+        #puts "query = " + query.blue
         items = eval(query)
         arr = items.map{|x| [x.interval_time, x.cnt]}
         hsh = arr.inject(Hash.new {|h,k| h[k]=0}) {|ha,(cat,name)| ha[cat] = name; ha}
-        #puts hsh.to_s.blue
-        #item_hsh[name] = hsh
+        #puts "hsh = " + hsh.to_s.blue
         item_hsh[condition[:name]] = hsh
       end
 
